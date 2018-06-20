@@ -4,17 +4,26 @@
  */
 package mockit.internal.expectations.transformation;
 
-import java.lang.instrument.*;
-import java.security.*;
-import javax.annotation.*;
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
 
-import mockit.asm.*;
-import mockit.internal.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import mockit.asm.ClassReader;
+import mockit.asm.ClassVisitor;
+import mockit.asm.ClassWriter;
+import mockit.asm.MethodVisitor;
+import mockit.asm.MethodWriter;
+import mockit.asm.WrappingClassVisitor;
+import mockit.internal.util.ClassNaming;
+import mockit.internal.util.VisitInterruptedException;
 
 public final class ExpectationsTransformer implements ClassFileTransformer
 {
-   private static final String BASE_CLASSES =
-      "mockit/Expectations mockit/Verifications mockit/VerificationsInOrder mockit/FullVerifications";
+	//added by hexq 2018.6.16
+	private static final String BASE_CLASSES =
+		"mockit/Expectations mockit/Verifications mockit/VerificationsInOrder mockit/FullVerifications org/test4j/module/jmockit/IMockit$Expectations";
 
    @Nullable @Override
    public byte[] transform(

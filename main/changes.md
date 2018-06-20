@@ -1,0 +1,3 @@
+###1.40 ### 
+- 经过JMockit和Test4J的对比测试发现，Test4J的new Expectations{}的record和replay阶段都是record阶段， 初步分析是Test4j中实现的new Expectations{}的内部类在执行完后没有完成阶段的切换，而阶段切换是在 ActiveInvocations中的endInvocations（）方法实现的。最终分析，该方法的调用是在Startup中的initialize（）方法中织入的。 通过ExpectationsTransformer类的方法进行织入，分析代码发现了这么一句：BASE_CLASSES = "mockit/Expectations mockit/Verifications mockit/VerificationsInOrder mockit/FullVerifications" 很明显Test4J实现的Expectations并不在这行代码中，因此修改内容为：BASE_CLASSES = "mockit/Expectations mockit/Verifications mockit/VerificationsInOrder mockit/FullVerifications org/test4j/module/jmockit/IMockit$Expectations" 经过测试问题解决，但这需要修改jmockit的源代码，并重新打包
+
